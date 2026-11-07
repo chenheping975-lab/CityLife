@@ -1,0 +1,21 @@
+# Include this server block from nginx.conf's http block.
+# Replace the root path with your absolute CityLife/front directory.
+server {
+    listen 8080;
+    server_name localhost;
+    root /absolute/path/to/CityLife/front;
+    index index.html;
+    client_max_body_size 10m;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    # The trailing slash removes /api/ before forwarding to Spring Boot.
+    location /api/ {
+        proxy_pass http://127.0.0.1:8081/;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+}

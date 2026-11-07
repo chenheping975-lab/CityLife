@@ -1,0 +1,15 @@
+# SeckillOrderIntegrationTest 使用 test profile。
+# 请通过 DB_URL / DB_USERNAME / DB_PASSWORD 指向专用测试库；测试会写入和清理数据。
+# Redis DB 及 RocketMQ Topic/消费组与普通运行配置分离。
+spring:
+  redis:
+    database: 1
+rocketmq:
+  producer:
+    group: seckill-order-producer-group-test
+seckill:
+  mq:
+    topic: seckill-order-topic-test
+    consumer-group: seckill-order-consumer-group-test
+    dlq-topic: "%DLQ%seckill-order-consumer-group-test"
+    dlq-consumer-group: seckill-order-dlq-consumer-group-test

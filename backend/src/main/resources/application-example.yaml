@@ -1,0 +1,52 @@
+# Copy to application.yaml before starting. Never commit the real configuration.
+# Environment variables are resolved by Spring; no real credentials belong here.
+server:
+  port: ${SERVER_PORT:8081}
+spring:
+  application:
+    name: citylife
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: ${DB_URL:jdbc:mysql://127.0.0.1:3306/citylife?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8}
+    username: ${DB_USERNAME:citylife}
+    password: ${DB_PASSWORD}
+  redis:
+    host: ${REDIS_HOST:127.0.0.1}
+    port: ${REDIS_PORT:6379}
+    password: ${REDIS_PASSWORD:}
+    database: ${REDIS_DATABASE:0}
+    lettuce:
+      pool:
+        max-active: 10
+        max-idle: 10
+        min-idle: 1
+        time-between-eviction-runs: 10s
+  jackson:
+    default-property-inclusion: non_null
+mybatis-plus:
+  type-aliases-package: com.hmdp.entity
+logging:
+  level:
+    com.hmdp: ${APP_LOG_LEVEL:debug}
+  pattern:
+    dateformat: mm:ss.SSS
+rocketmq:
+  name-server: ${ROCKETMQ_NAME_SERVER:127.0.0.1:9876}
+  producer:
+    group: ${ROCKETMQ_PRODUCER_GROUP:seckill-order-producer-group}
+    send-message-timeout: 3000
+seckill:
+  mq:
+    topic: ${SECKILL_TOPIC:seckill-order-topic}
+    consumer-group: ${SECKILL_CONSUMER_GROUP:seckill-order-consumer-group}
+    consumer-enabled: true
+    dlq-topic: ${SECKILL_DLQ_TOPIC:%DLQ%seckill-order-consumer-group}
+    dlq-consumer-group: ${SECKILL_DLQ_CONSUMER_GROUP:seckill-order-dlq-consumer-group}
+  rate-limit:
+    per-second: 5
+  reconcile:
+    interval-ms: 10000
+    resend-threshold-ms: 5000
+    max-send-attempts: 5
+    compensate-threshold-ms: 60000
+    batch-size: 100
